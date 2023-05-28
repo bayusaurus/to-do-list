@@ -1,0 +1,49 @@
+<form 
+    method ='post' 
+    enctype ="multipart/form-data" 
+    {% if edit %}
+        action="{% url 'notes_edit' id=id %}"
+    {% else %}
+        action="{% url 'notes_create' %}"
+    {% endif %}
+>
+    {% csrf_token %}
+    
+    {% if edit %}
+        <input type="hidden" name="id" id="id" value="{{ id }}">
+    {% endif %}
+    
+    <div class="form-group">
+        <label for="{{ form.title.id_for_label }}">Note Title</label>
+        <input type="text" placeholder="Title..."
+            class="form-control {% if form.title.errors %}is-invalid{% endif %}"
+            name="{{ form.title.name }}"
+            id="{{ form.title.id_for_label }}" 
+            maxlength="{{ form.title.field.max_length }}"
+            {% if form.title.value != None %}value="{{ form.title.value|stringformat:'s' }}"{% endif %}
+            {% if form.title.field.required %}required{% endif %} >
+        {% if form.title.errors %}
+            <div class="invalid-feedback">
+                {{ form.title.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.description.id_for_label }}">Description</label>
+        <textarea 
+            class="form-control {% if form.description.errors %}is-invalid{% endif %}" 
+            id="{{ form.description.id_for_label }}" 
+            name="{{ form.description.name }}"
+            maxlength="{{ form.description.field.max_length }}"
+            {% if form.description.field.required %}required{% endif %}
+            rows="5">{% if form.description.value != None %}{{ form.description.value|stringformat:'s' }}{% endif %}</textarea>
+        {% if form.description.errors %}
+            <div class="invalid-feedback">
+                {{ form.description.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Simpan</button>
+</form>

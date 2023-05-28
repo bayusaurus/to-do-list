@@ -1,0 +1,174 @@
+{% extends 'layout/base.html' %}
+
+{% block scripts %}
+        <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">        
+{% endblock scripts %}
+{% block navbar %}
+    {% include 'layout/navbar.html' %}
+{% endblock navbar %}
+
+{% block main %}
+{% load static %}
+    <div class="py-5 bg-light">
+        <div class="container bg-light">
+            <div class="card">
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div 
+                                {% if message.tags == "error" %}class=" alert alert-danger mb-3 mt-2"{% endif %} 
+                                {% if message.tags == "success" %}class=" alert alert-success mb-3 mt-2"{% endif %} 
+                                role="alert">
+                                {{message}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>  
+                        {% endfor %}
+                    {% endif %}
+                    <form method="POST" action="{% url 'notes_reorder' %}">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5>To Do List</h5>
+                        <div>
+                            <button type="submit" class="btn btn-sm btn-info mr-2">Reorder</button>
+                            <a href="{%url 'notes_create'%}">
+                                <button type="button" class="btn btn-sm btn-primary">Add</button>
+                            </a>
+                        </div>
+                    </div>
+                    <ul class="list-group" id="sortable-1">
+                        {% if notes %}
+                            {% for note in notes %}
+                                <li class="list-group-item list-group-item-action mb-1 {% if note.is_done%}list-group-item-dark{% endif %}">
+                                    <div class="row">
+                                        <div class="col-8">{% if note.is_done%}<del>{{note.title}}</del>{% else %}{{note.title}}{% endif %}</div>
+                                        <div class="col-4 d-flex justify-content-end">
+                                            <input type="hidden" name="id" value="{{note.id}}" />
+                                            <button type="button" class="btn btn-sm btn-primary btn-circle pass-data-detail mr-2" 
+                                                data-tooltip="tooltip" data-placement="top" title="Detail"
+                                                data-toggle="modal" data-target="#modal-detail"
+                                                data-title="{{ note.title }}"
+                                                data-description="{{ note.description }}"
+                                                data-created_at="{{ note.created_at }}"
+                                                data-is_done="{{ note.is_done }}">
+                                                Detail
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-success pass-data-confirm mr-2"
+                                                data-tooltip="tooltip" data-placement="top" title="Delete"
+                                                data-toggle="modal" data-target="#modal-confirm"
+                                                data-id="{{ note.id }}"
+                                                data-text-confirm="Are you sure change the status of {{note.title}}?"
+                                                data-action="flag">
+                                                {% if note.is_done %}Undone{% else %}Done{% endif %}
+                                            </button>
+                                            <a href="{% url 'notes_edit' note.id %}"><button type="button" class="btn btn-sm btn-info mr-2">Edit</button></a>
+                                            <button type="button" class="btn btn-sm btn-danger pass-data-confirm"
+                                                data-tooltip="tooltip" data-placement="top" title="Delete"
+                                                data-toggle="modal" data-target="#modal-confirm"
+                                                data-id="{{ note.id }}"
+                                                data-text-confirm="Are you sure to delete {{note.title}}?"
+                                                data-action="delete">
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                                <div class="text-center">There's no note yet.</div>
+                        {% endif %}
+                        
+                    </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-centerTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="m-0 font-weight-bold text-primary" id="exampleModalLongTitle">Detail Notes</h5>
+                <button type="button" class="close text-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body text-center">
+                    <span id="text-confirm"></span>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form method="POST" action="{% url 'notes_flag_delete' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="" id="id-confirm" />
+                    <input type="hidden" name="action" value="" id="action-confirm" />
+                    <button id="button-confirm" type="submit" class="btn btn-primary">Yes</button>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-detail" tabindex="-1" role="dialog" aria-labelledby="modal-centerTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="m-0 font-weight-bold text-primary" id="exampleModalLongTitle">Detail Notes</h5>
+                <button type="button" class="close text-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                        <div class="form-group">
+                            <label for="detail-title">Title</label>
+                            <input type="text" class="form-control" id="detail-title" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="detail-description">Description</label>
+                            <textarea class="form-control" id="detail-description" rows="3" disabled></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="detail-is_done">Done</label>
+                            <input type="text" class="form-control" id="detail-is_done" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="detail-created_at">Created At</label>
+                            <input type="text" class="form-control" id="detail-created_at" disabled>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+
+
+{% block footer %}
+    {% include 'layout/footer.html' %}
+{% endblock footer %}
+
+{% block scripts_bawah %}
+<script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script>
+
+        $( document ).ready(function() {
+            $( "#sortable-1" ).sortable();
+        });
+    $('.pass-data-detail').click(function(){
+        $('#detail-title').val($(this).attr('data-title'));
+        $('#detail-description').val($(this).attr('data-description'));
+        $('#detail-is_done').val($(this).attr('data-is_done'));
+        $('#detail-created_at').val($(this).attr('data-created_at'));
+    });
+    $('.pass-data-confirm').click(function(){
+        $('#id-confirm').val($(this).attr('data-id'));
+        $('#action-confirm').val($(this).attr('data-action'));
+        $('#text-confirm').text($(this).attr('data-text-confirm'));
+    });
+</script>
+{% endblock scripts_bawah %}

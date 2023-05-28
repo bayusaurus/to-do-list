@@ -1,0 +1,151 @@
+{% extends 'layout/base.html' %}
+
+{% block navbar %}
+    {% include 'layout/navbar.html' %}
+{% endblock navbar %}
+
+{% block main %}
+{% load static %}
+    <div class="py-5 bg-light">
+        <div class="container bg-light">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h5 class="text-center">Registration</h5> 
+                        <form class="user" method="POST" action="{% url 'register' %}">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div 
+                                        {% if message.tags == "error" %}class=" alert alert-danger my-2"{% endif %} 
+                                        {% if message.tags == "success" %}class=" alert alert-success my-2"{% endif %} 
+                                        role="alert">
+                                        {{message}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>  
+                                {% endfor %}
+                            {% endif %}
+
+                            {% if form.errors %}
+                                {% for error in form.non_field_errors  %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{error}}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            {% csrf_token %}
+
+                            <div class="form-group">
+                                <label for="{{ form.username.id_for_label }}">Username</label>
+                                <input type="text" placeholder="Username..."
+                                    class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                                    name="{{ form.username.name }}"
+                                    id="{{ form.username.id_for_label }}" 
+                                    maxlength="{{ form.username.field.max_length }}"
+                                    {% if form.username.value != None %}value="{{ form.username.value|stringformat:'s' }}"{% endif %}
+                                    {% if form.username.field.required %}required{% endif %} >
+                                {% if form.username.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.username.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.email.id_for_label }}">Email</label>
+                                <input type="email" placeholder="Email..."
+                                    class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                                    name="{{ form.email.name }}"
+                                    id="{{ form.email.id_for_label }}" 
+                                    maxlength="{{ form.email.field.max_length }}"
+                                    {% if form.email.value != None %}value="{{ form.email.value|stringformat:'s' }}"{% endif %}
+                                    {% if form.email.field.required %}required{% endif %} >
+                                {% if form.email.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.email.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.first_name.id_for_label }}">First_name</label>
+                                <input type="text" placeholder="First_name..."
+                                    class="form-control {% if form.first_name.errors %}is-invalid{% endif %}"
+                                    name="{{ form.first_name.name }}"
+                                    id="{{ form.first_name.id_for_label }}" 
+                                    maxlength="{{ form.first_name.field.max_length }}"
+                                    {% if form.first_name.value != None %}value="{{ form.first_name.value|stringformat:'s' }}"{% endif %}
+                                    {% if form.first_name.field.required %}required{% endif %} >
+                                {% if form.first_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.first_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.last_name.id_for_label }}">Last_name</label>
+                                <input type="text" placeholder="Last_name..."
+                                    class="form-control {% if form.last_name.errors %}is-invalid{% endif %}"
+                                    name="{{ form.last_name.name }}"
+                                    id="{{ form.last_name.id_for_label }}" 
+                                    maxlength="{{ form.last_name.field.max_length }}"
+                                    {% if form.last_name.value != None %}value="{{ form.last_name.value|stringformat:'s' }}"{% endif %}
+                                    {% if form.last_name.field.required %}required{% endif %} >
+                                {% if form.last_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.last_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.password1.id_for_label }}">Password</label>
+                                <input type="password" placeholder="Insert Password..."
+                                    class="form-control {% if form.password1.errors %}is-invalid{% endif %}"
+                                    name="{{ form.password1.name }}"
+                                    id="{{ form.password1.id_for_label }}" 
+                                    maxlength="{{ form.password1.field.max_length }}"
+                                    {% if form.password1.value != None %}value="{{ form.password1.value|stringformat:'s' }}"{% endif %}
+                                    {% if form.password1.field.required %}required{% endif %} >
+                                {% if form.password1.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.password1.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="{{ form.password2.id_for_label }}">Ulangi Password</label>
+                                <input type="password" placeholder="Confirm Password..."
+                                    class="form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                                    name="{{ form.password2.name }}"
+                                    id="{{ form.password2.id_for_label }}" 
+                                    maxlength="{{ form.password2.field.max_length }}"
+                                    {% if form.password2.value != None %}value="{{ form.password2.value|stringformat:'s' }}"{% endif %}
+                                    {% if form.password2.field.required %}required{% endif %} >
+                                {% if form.password2.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.password2.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                Register
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+
+
+{% block footer %}
+    {% include 'layout/footer.html' %}
+{% endblock footer %}
+
+{% block scripts_bawah %}
+{% endblock scripts_bawah %}

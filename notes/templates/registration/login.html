@@ -1,0 +1,70 @@
+{% extends 'layout/base.html' %}
+
+{% block navbar %}
+    {% include 'layout/navbar.html' %}
+{% endblock navbar %}
+
+{% block main %}
+{% load static %}
+    <div class="py-5 bg-light">
+        <div class="container bg-light d-flex justify-content-center">
+            <div class="card col-6">
+                <div class="card-body">
+                    <div class="mb-3 text-center">
+                        <h5 class="mb-3">Login</h5> 
+                        <form class="user" method="POST">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div 
+                                        {% if message.tags == "error" %}class=" alert alert-danger my-2"{% endif %} 
+                                        {% if message.tags == "success" %}class=" alert alert-success my-2"{% endif %} 
+                                        role="alert">
+                                        {{message}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>  
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.errors %}
+                                {% for error in form.non_field_errors  %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{error}}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-user"
+                                    name="username" autofocus="" autocapitalize="none" 
+                                    autocomplete="username" maxlength="150" required="" 
+                                    id="id_username" 
+                                    placeholder="Masukkan Username...">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control form-control-user"
+                                placeholder="Masukkan password..." name="password" autocomplete="current-password" 
+                                required="" id="id_password">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                Login
+                            </button>
+                        </form>
+                        <hr>
+                        <div class="text-center">
+                            <a href="{% url 'register' %}" class="small">Register</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+
+
+{% block footer %}
+    {% include 'layout/footer.html' %}
+{% endblock footer %}
+
+{% block scripts_bawah %}
+{% endblock scripts_bawah %}

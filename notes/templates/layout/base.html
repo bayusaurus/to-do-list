@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    {% if title %}
+        <title>MyNotes | {{ title }}</title>
+    {% else %}
+        <title>MyNotes</title>
+    {% endif %}
+    
+    <!-- JS -->
+    {% block scripts %} {% endblock scripts %}
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap/bootstrap-icons-1.8.3/bootstrap-icons.css' %}">
+    {% block css %} {% endblock css %}
+</head>
+<body class="bg-light">
+    {% block navbar %} {% endblock navbar %}
+
+    {% block main %} {% endblock main %}
+
+    {% block footer %} {% endblock footer %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'js/bootstrap/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
+    {% block scripts_bawah %} {% endblock scripts_bawah %}
+</body>
+</html>

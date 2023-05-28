@@ -1,0 +1,50 @@
+{% extends 'layout/base.html' %}
+
+{% block navbar %}
+    {% include 'layout/navbar.html' %}
+{% endblock navbar %}
+
+{% block main %}
+    <div class="div container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'dashboard' %}">Notes</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% if edit %}Edit{% else %}Add{% endif %}</li>
+            </ol>
+        </nav>
+    
+        {% if messages %}
+            {% for message in messages %}
+                <div 
+                    {% if message.tags == "error" %}class=" alert alert-danger my-2"{% endif %} 
+                    {% if message.tags == "success" %}class=" alert alert-success my-2"{% endif %} 
+                    role="alert">
+                    {{message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>  
+            {% endfor %}
+        {% endif %}
+        
+        <div class="card shadow mb-5">
+            <h5 class="card-header">{% if edit %}Edit{% else %}Add{% endif %} Notes</h5>
+            <div class="card-body">
+                {% if edit %}
+                    {% if notes %}
+                        {% include 'notes/form.html' %}
+                    {% else %}
+                        <h1>Note not found</h1>
+                    {% endif %}
+                {% else %}
+                    {% include 'notes/form.html' %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+
+{% block footer %}
+    {% include 'layout/footer.html' %}
+{% endblock footer %}

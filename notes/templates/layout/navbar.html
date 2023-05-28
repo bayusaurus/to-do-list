@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light py-5">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'dashboard' %}" >MyNotes</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">  
+            </ul>
+            {% if user.is_authenticated %}
+                <div class="">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link active dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                                {{user.get_full_name}}
+                            </a>
+                            <div class="dropdown-menu">
+                                <a href="{% url 'logout' %}" class="dropdown-item" href="#">Log Out</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>
